@@ -1,2 +1,5 @@
+requests
 Flask
 mysql-connector-python
+pyjwt
+cryptography
