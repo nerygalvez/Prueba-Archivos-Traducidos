@@ -17,10 +17,8 @@ VALUES
 */
 
 
-
-
-CREATE DATABASE 'Traducido';
-USE 'Traducido';
+CREATE DATABASE  IF NOT EXISTS Traducido /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE Traducido;
 -- MySQL dump 10.13  Distrib 8.0.17, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: Traducido
@@ -42,16 +40,16 @@ USE 'Traducido';
 -- Table structure for table 'Archivo'
 --
 
-DROP TABLE IF EXISTS 'Archivo';
+DROP TABLE IF EXISTS Archivo;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE 'Archivo' (
-  'Complemento' varchar(100) NOT NULL,
-  'Localizacion' varchar(100) NOT NULL,
-  'tipoArchivo' varchar(20) DEFAULT NULL,
-  'Archivo' blob,
-  'idEstado' int(11) DEFAULT NULL,
-  PRIMARY KEY ('Complemento','Localizacion')
+CREATE TABLE Archivo (
+  Complemento varchar(100) NOT NULL,
+  Localizacion varchar(100) NOT NULL,
+  tipoArchivo varchar(20) DEFAULT NULL,
+  Archivo blob,
+  idEstado int(11) DEFAULT NULL,
+  PRIMARY KEY (Complemento,Localizacion)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -59,26 +57,25 @@ CREATE TABLE 'Archivo' (
 -- Dumping data for table 'Archivo'
 --
 
-LOCK TABLES 'Archivo' WRITE;
-/*!40000 ALTER TABLE 'Archivo' DISABLE KEYS */;
-/*!40000 ALTER TABLE 'Archivo' ENABLE KEYS */;
+LOCK TABLES Archivo WRITE;
+
 UNLOCK TABLES;
 
 --
 -- Table structure for table 'ArchivoCadena'
 --
 
-DROP TABLE IF EXISTS 'ArchivoCadena';
+DROP TABLE IF EXISTS ArchivoCadena;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE 'ArchivoCadena' (
-  'idDetalleArchivo' int(11) NOT NULL AUTO_INCREMENT,
-  'Complemento' varchar(100) NOT NULL,
-  'Localizacion' varchar(100) DEFAULT NULL,
-  'nombreusr' varchar(100) DEFAULT NULL,
-  'correousr' varchar(100) DEFAULT NULL,
-  'Cadena' varchar(6000) DEFAULT NULL,
-  PRIMARY KEY ('idDetalleArchivo')
+CREATE TABLE ArchivoCadena (
+  idDetalleArchivo int(11) NOT NULL AUTO_INCREMENT,
+  Complemento varchar(100) NOT NULL,
+  Localizacion varchar(100) DEFAULT NULL,
+  nombreusr varchar(100) DEFAULT NULL,
+  correousr varchar(100) DEFAULT NULL,
+  Cadena varchar(6000) DEFAULT NULL,
+  PRIMARY KEY (idDetalleArchivo)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -86,23 +83,22 @@ CREATE TABLE 'ArchivoCadena' (
 -- Dumping data for table 'ArchivoCadena'
 --
 
-LOCK TABLES 'ArchivoCadena' WRITE;
-/*!40000 ALTER TABLE 'ArchivoCadena' DISABLE KEYS */;
-INSERT INTO 'ArchivoCadena' VALUES (1,'WordPress Menu','UA-08','Juan Carlos Maeda Juarez','jcarlosmaeda@gmail.com','Menu'),(2,'WordPress Menu','UA-08','Juan Carlos Maeda Juarez','jcarlosmaeda@gmail.com',' Login'),(3,'WordPress Menu','UA-08','Juan Carlos Maeda Juarez','jcarlosmaeda@gmail.com',' Bienvenida'),(4,'WordPress Menu','UA-08','Juan Carlos Maeda Juarez','jcarlosmaeda@gmail.com',' Acerca de');
-/*!40000 ALTER TABLE 'ArchivoCadena' ENABLE KEYS */;
+LOCK TABLES ArchivoCadena WRITE;
+
+INSERT INTO ArchivoCadena VALUES (1,'WordPress Menu','UA-08','Juan Carlos Maeda Juarez','jcarlosmaeda@gmail.com','Menu'),(2,'WordPress Menu','UA-08','Juan Carlos Maeda Juarez','jcarlosmaeda@gmail.com',' Login'),(3,'WordPress Menu','UA-08','Juan Carlos Maeda Juarez','jcarlosmaeda@gmail.com',' Bienvenida'),(4,'WordPress Menu','UA-08','Juan Carlos Maeda Juarez','jcarlosmaeda@gmail.com',' Acerca de');
 UNLOCK TABLES;
 
 --
 -- Table structure for table 'table1'
 --
 
-DROP TABLE IF EXISTS 'table1';
+DROP TABLE IF EXISTS table1;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE 'table1' (
-  'id' int(11) NOT NULL AUTO_INCREMENT,
-  'value' varchar(6000) DEFAULT NULL,
-  PRIMARY KEY ('id')
+CREATE TABLE table1 (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  value varchar(6000) DEFAULT NULL,
+  PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -110,16 +106,14 @@ CREATE TABLE 'table1' (
 -- Dumping data for table 'table1'
 --
 
-LOCK TABLES 'table1' WRITE;
-/*!40000 ALTER TABLE 'table1' DISABLE KEYS */;
-INSERT INTO 'table1' VALUES (1,'Menu, Login, Bienvenida, Acerca de, Cargar, Prueba');
-/*!40000 ALTER TABLE 'table1' ENABLE KEYS */;
+LOCK TABLES table1 WRITE;
+INSERT INTO table1 VALUES (1,'Menu, Login, Bienvenida, Acerca de, Cargar, Prueba');
 UNLOCK TABLES;
 
 --
 -- Dumping routines for database 'Traducido'
 --
-/*!50003 DROP PROCEDURE IF EXISTS 'sp_traducidosubeArchivo' */;
+
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -129,7 +123,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER='root'@'%' PROCEDURE 'sp_traducidosubeArchivo'(
+CREATE DEFINER='root'@'%' PROCEDURE sp_traducidosubeArchivo(
 _nombre varchar(100), _correo varchar(100),_nombrecomplemento varchar(100),_localizacion varchar(50),
 _cadena varchar(6632)
 )
@@ -160,7 +154,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS 'sp_traducircargaArchivo' */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -170,7 +163,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER='root'@'%' PROCEDURE 'sp_traducircargaArchivo'(_Complemento varchar(100),_Localizacion varchar(100), _tipoArchivo varchar(20), _idEstado int,_Archivo blob)
+CREATE DEFINER='root'@'%' PROCEDURE sp_traducircargaArchivo(_Complemento varchar(100),_Localizacion varchar(100), _tipoArchivo varchar(20), _idEstado int,_Archivo blob)
 BEGIN
 	  DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	  BEGIN
@@ -196,6 +189,3 @@ DELIMITER ;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2019-10-27  2:12:22
-
-
-
