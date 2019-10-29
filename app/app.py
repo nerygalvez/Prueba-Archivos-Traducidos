@@ -79,17 +79,23 @@ def ComplementoTraducido():
     correo_usuario = solicitud.get('correo') #Correo de usuario original
     complemento = solicitud.get('complemento')
 
-
-    print(nombre_usuario)
-    print(correo_usuario)
-    print(complemento)
-
-
-
+    nombre_complemento = complemento['nombre']
+    localizacionOriginal = complemento['localizacionOriginal']
+    localizacionTraducida = complemento['localizacionTraducida']
+    contenido = complemento['contenido']
+    contenido_string = json.dumps(contenido)
 
 
-
-
+    
+    #return jsonify(
+    #                nombre_usuario=nombre_usuario,
+    #                correo_usuario=correo_usuario,
+    #                complemento=complemento,
+    #                nombre_complemento=nombre_complemento,
+    #                localizacionOriginal=localizacionOriginal,
+    #                localizacionTraducida=localizacionTraducida,
+    #                contenido=contenido,
+    #               )
 
 
     config = {
@@ -97,18 +103,26 @@ def ComplementoTraducido():
         'password': 'root',
         'host': 'db',
         'port': '3306',
-        'database': 'tareaSA',
+        'database': 'Traducido',
         'auth_plugin':'mysql_native_password'
     }
     connection = mysql.connector.connect(**config)
     cursor = connection.cursor()
-    cursor.execute('SELECT * FROM usuarios')
-    results = [{"nombre": nombre, "apellido" : apellido} for (nombre, apellido) in cursor]
+    
+    #cursor.execute('SELECT * FROM usuarios')
+    #results = [{"nombre": nombre, "apellido" : apellido} for (nombre, apellido) in cursor]
+
+    cursor.callproc('sp_traducidosubeArchivo', [nombre_usuario,correo_usuario,nombre_complemento,localizacionTraducida,contenido_string, ])
+    # print results
+    print("Printing laptop details")
+    results = {"Nombre":"Nery Gonzalo Galvez Gomez"}
+    for result in cursor.stored_results():
+        print(result.fetchall())
+        
     cursor.close()
     connection.close()
 
-    #return results
-    #return json.dumps({'usuarios': usuarios()})
+    
 
     return render_template('index.html', data=results)
 
