@@ -112,6 +112,9 @@ def ComplementoTraducido():
     #cursor.execute('SELECT * FROM usuarios')
     #results = [{"nombre": nombre, "apellido" : apellido} for (nombre, apellido) in cursor]
 
+    #
+
+
     cursor.callproc('sp_traducidosubeArchivo', [nombre_usuario,correo_usuario,nombre_complemento,localizacionTraducida,contenido_string, ])
     # print results
     print("Printing laptop details")
