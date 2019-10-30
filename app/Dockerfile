@@ -5,6 +5,7 @@ FROM python:3.6
 COPY . /app
 
 #EXPOSE 80
+EXPOSE 5003
 
 WORKDIR /app
 
