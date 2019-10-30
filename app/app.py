@@ -1,5 +1,5 @@
 from typing import List, Dict
-from flask import Flask,render_template,request,jsonify
+from flask import Flask,render_template,request,jsonify,redirect
 import mysql.connector
 import json
 import jwt
@@ -171,9 +171,14 @@ def listarComplementos() -> str:
 
 
 
+@app.route('/descargarPO/<id>',methods=['GET'])
+def descargarPO(id):
+    return redirect('/listarComplementos')
 
 
-
+@app.route('/descargarMO/<id>',methods=['GET'])
+def descargarMO(id):
+    return redirect('/listarComplementos')
 
 
 

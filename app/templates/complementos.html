@@ -22,6 +22,10 @@
       <td>{{ x.Localizacion }}</td>
       <td>{{ x.nombreusr }}</td>
       <td>{{ x.correousr }}</td>
+      <td>
+          <a href="/descargarPO/{{x.idDetalleArchivo}}"   class="btn btn-primary btn-sm">Descargar archivo PO</a>
+          <a href="/descargarMO/{{x.idDetalleArchivo}}"   class="btn btn-secondary btn-sm">Descargar archivo MO</a>
+      </td>
       
   	</tr>
     {% endfor %}
