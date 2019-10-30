@@ -15,4 +15,6 @@ services:
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - ./db:/docker-entrypoint-initdb.d/:ro
+    security_opt:
+      - seccomp:unconfined
 
