@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="jumbotron">
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Nombre complemento</th>
+      <th scope="col">Localizacion</th>
+      <th scope="col">Nombre usuario</th>
+      <th scope="col">Correo usuario</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+
+  	{% for x in data %}
+    <tr class="table-info">
+      <th scope="row">{{ x.idDetalleArchivo }}</th>
+      <td>{{ x.Complemento }}</td>
+      <td>{{ x.Localizacion }}</td>
+      <td>{{ x.nombreusr }}</td>
+      <td>{{ x.correousr }}</td>
+      
+  	</tr>
+    {% endfor %}
+  </tbody>
+</table> 
+</div>
+{% endblock %}

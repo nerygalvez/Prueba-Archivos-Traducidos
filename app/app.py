@@ -104,7 +104,7 @@ def ComplementoTraducido():
         'host': 'db',
         'port': '3306',
         'database': 'Traducido',
-        'auth_plugin':'mysql_native_password'
+        #'auth_plugin':'mysql_native_password'
     }
     connection = mysql.connector.connect(**config)
     cursor = connection.cursor()
@@ -122,12 +122,58 @@ def ComplementoTraducido():
     for result in cursor.stored_results():
         print(result.fetchall())
         
+
+    connection.commit()
+
     cursor.close()
     connection.close()
 
     
 
     return render_template('index.html', data=results)
+
+
+
+
+@app.route('/listarComplementos')
+def listarComplementos() -> str:
+    config = {
+        'user': 'root',
+        'password': 'root',
+        'host': 'db',
+        'port': '3306',
+        'database': 'Traducido',
+        'auth_plugin':'mysql_native_password'
+    }
+
+    """
+        idDetalleArchivo int(11) NOT NULL AUTO_INCREMENT,
+        Complemento varchar(100) NOT NULL,
+        Localizacion varchar(100) DEFAULT NULL,
+        nombreusr varchar(100) DEFAULT NULL,
+        correousr varchar(100) DEFAULT NULL,
+        Cadena varchar(6000) DEFAULT NULL,
+    """
+
+    connection = mysql.connector.connect(**config)
+    cursor = connection.cursor()
+    cursor.execute('SELECT idDetalleArchivo, Complemento,Localizacion,nombreusr,correousr FROM ArchivoCadena')
+    results = [{"idDetalleArchivo": idDetalleArchivo, "Complemento" : Complemento, "Localizacion" : Localizacion, "nombreusr" : nombreusr, "correousr" : correousr} for (idDetalleArchivo, Complemento,Localizacion,nombreusr,correousr) in cursor]
+    cursor.close()
+    connection.close()
+
+    #return results
+    #return json.dumps({'usuarios': usuarios()})
+
+    return render_template('complementos.html', data=results)
+
+
+
+
+
+
+
+
 
 
 

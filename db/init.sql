@@ -134,18 +134,9 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	  END;
 truncate table table1;
 insert into table1 (value) values(_cadena);
-insert into ArchivoCadena (Complemento,Localizacion,nombreusr,correousr,cadena)
-SELECT
-  _nombrecomplemento,_localizacion,_nombre,_correo,
-  SUBSTRING_INDEX(SUBSTRING_INDEX(value, ',', n.digit+1), ',', -1) Valor
-FROM
-  table1
-  INNER JOIN
-  (SELECT 0 digit UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) n
-  ON LENGTH(REPLACE(value, ',' , '')) <= LENGTH(value)-n.digit
-ORDER BY
-  id,
-  n.digit;
+insert into ArchivoCadena (Complemento,Localizacion,nombreusr,correousr,Cadena)
+values(_nombrecomplemento,_localizacion, _nombre, _correo, _cadena);
+
   
 select 200 estado, 'Archivo cargado correctamente';
 END ;;
