@@ -6,52 +6,9 @@ import jwt
 
 app = Flask(__name__)
 
-
-def usuarios() -> List[Dict]:
-    config = {
-        'user': 'root',
-        'password': 'root',
-        'host': 'db',
-        'port': '3306',
-        'database': 'tareaSA',
-        'auth_plugin':'mysql_native_password'
-    }
-    connection = mysql.connector.connect(**config)
-    cursor = connection.cursor()
-    cursor.execute('SELECT * FROM usuarios')
-    results = [{nombre: apellido} for (nombre, apellido) in cursor]
-    cursor.close()
-    connection.close()
-
-    return results
-
-
 @app.route('/')
 def index() -> str:
-    return json.dumps({'usuarios': usuarios()})
-
-
-@app.route('/prueba')
-def prueba() -> str:
-    config = {
-        'user': 'root',
-        'password': 'root',
-        'host': 'db',
-        'port': '3306',
-        'database': 'tareaSA',
-        'auth_plugin':'mysql_native_password'
-    }
-    connection = mysql.connector.connect(**config)
-    cursor = connection.cursor()
-    cursor.execute('SELECT * FROM usuarios')
-    results = [{"nombre": nombre, "apellido" : apellido} for (nombre, apellido) in cursor]
-    cursor.close()
-    connection.close()
-
-    #return results
-    #return json.dumps({'usuarios': usuarios()})
-
-    return render_template('index.html', data=results)
+    return redirect('/listarComplementos')
 
 
 
@@ -86,17 +43,6 @@ def ComplementoTraducido():
     contenido_string = json.dumps(contenido)
 
 
-    
-    #return jsonify(
-    #                nombre_usuario=nombre_usuario,
-    #                correo_usuario=correo_usuario,
-    #                complemento=complemento,
-    #                nombre_complemento=nombre_complemento,
-    #                localizacionOriginal=localizacionOriginal,
-    #                localizacionTraducida=localizacionTraducida,
-    #                contenido=contenido,
-    #               )
-
 
     config = {
         'user': 'root',
@@ -109,27 +55,15 @@ def ComplementoTraducido():
     connection = mysql.connector.connect(**config)
     cursor = connection.cursor()
     
-    #cursor.execute('SELECT * FROM usuarios')
-    #results = [{"nombre": nombre, "apellido" : apellido} for (nombre, apellido) in cursor]
-
-    #
-
 
     cursor.callproc('sp_traducidosubeArchivo', [nombre_usuario,correo_usuario,nombre_complemento,localizacionTraducida,contenido_string, ])
-    # print results
-    #print("Printing laptop details")
 
     global resultado
 
     #results = {"Nombre":"Nery Gonzalo Galvez Gomez"}
     for result in cursor.stored_results():
-    #    #print(result.fetchall())
-    #    lista.append(result.fetchall())
         resultado = result.fetchall()
-        
-    
-    
-    
+     
     
     connection.commit()
 
@@ -158,14 +92,6 @@ def listarComplementos() -> str:
         'auth_plugin':'mysql_native_password'
     }
 
-    """
-        idDetalleArchivo int(11) NOT NULL AUTO_INCREMENT,
-        Complemento varchar(100) NOT NULL,
-        Localizacion varchar(100) DEFAULT NULL,
-        nombreusr varchar(100) DEFAULT NULL,
-        correousr varchar(100) DEFAULT NULL,
-        Cadena varchar(6000) DEFAULT NULL,
-    """
 
     connection = mysql.connector.connect(**config)
     cursor = connection.cursor()
