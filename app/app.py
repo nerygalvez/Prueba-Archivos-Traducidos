@@ -117,20 +117,32 @@ def ComplementoTraducido():
 
     cursor.callproc('sp_traducidosubeArchivo', [nombre_usuario,correo_usuario,nombre_complemento,localizacionTraducida,contenido_string, ])
     # print results
-    print("Printing laptop details")
-    results = {"Nombre":"Nery Gonzalo Galvez Gomez"}
-    for result in cursor.stored_results():
-        print(result.fetchall())
-        
+    #print("Printing laptop details")
 
+    global resultado
+
+    #results = {"Nombre":"Nery Gonzalo Galvez Gomez"}
+    for result in cursor.stored_results():
+    #    #print(result.fetchall())
+    #    lista.append(result.fetchall())
+        resultado = result.fetchall()
+        
+    
+    
+    
+    
     connection.commit()
 
     cursor.close()
     connection.close()
 
     
-
-    return render_template('index.html', data=results)
+    return jsonify(
+                    estado = resultado[0][0],
+                    mensaje = resultado[0][1],
+                )
+    
+    #return render_template('index.html', data=results)
 
 
 
@@ -161,9 +173,6 @@ def listarComplementos() -> str:
     results = [{"idDetalleArchivo": idDetalleArchivo, "Complemento" : Complemento, "Localizacion" : Localizacion, "nombreusr" : nombreusr, "correousr" : correousr} for (idDetalleArchivo, Complemento,Localizacion,nombreusr,correousr) in cursor]
     cursor.close()
     connection.close()
-
-    #return results
-    #return json.dumps({'usuarios': usuarios()})
 
     return render_template('complementos.html', data=results)
 
