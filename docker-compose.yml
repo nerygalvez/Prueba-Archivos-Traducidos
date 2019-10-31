@@ -42,3 +42,5 @@ services:
 networks:
   jwt-network:
     driver: bridge
+  traducciones-network:
+    driver: bridge
