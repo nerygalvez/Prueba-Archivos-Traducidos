@@ -3,6 +3,7 @@ from flask import Flask,render_template,request,jsonify,redirect
 import mysql.connector
 import json
 import jwt
+import requests
 
 app = Flask(__name__)
 
@@ -115,6 +116,23 @@ def descargarPO(id):
 def descargarMO(id):
     return redirect('/listarComplementos')
 
+
+
+@app.route('/suscripcionAlmacenamiento',methods=['GET'])
+def suscripcionAlmacenamiento():
+    parametros = {"token":"1234", "ip":"127.0.0.1:5003"}
+    ruta_solicitud = 'http://' + '127.0.0.1:5001' + '/post/suscripcion'
+    response = requests.post(ruta_solicitud, params=parametros)
+
+    #Debería de obtener un json Respuesta
+    """
+        {
+            "codigo":"200",
+            "mensaje":"Suscrito correctamente"
+        }
+    """
+    #return response.text
+    return redirect('/listarComplementos') #Redirecciono a la lista de complementos
 
 
 
