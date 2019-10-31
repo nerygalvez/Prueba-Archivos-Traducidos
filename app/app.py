@@ -138,7 +138,7 @@ def suscripcionAlmacenamiento():
 
 
 @app.route('/pruebaObtenerToken',methods=['GET'])
-def pruebaObtenerToken(id):
+def pruebaObtenerToken():
     token = obtenerNuevoToken()
 
     return jsonify(
