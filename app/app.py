@@ -120,7 +120,8 @@ def descargarMO(id):
 
 @app.route('/suscripcionAlmacenamiento',methods=['GET'])
 def suscripcionAlmacenamiento():
-    parametros = {"token":"1234", "ip":"127.0.0.1:5003"}
+    token = obtenerNuevoToken() #Genero un nuevo token
+    parametros = {"token":token, "ip":"127.0.0.1:5003"}
     ruta_solicitud = 'http://' + '127.0.0.1:5001' + '/post/suscripcion'
     response = requests.post(ruta_solicitud, params=parametros)
 
@@ -133,6 +134,39 @@ def suscripcionAlmacenamiento():
     """
     #return response.text
     return redirect('/listarComplementos') #Redirecciono a la lista de complementos
+
+
+
+@app.route('/pruebaObtenerToken',methods=['GET'])
+def pruebaObtenerToken(id):
+    token = obtenerNuevoToken()
+
+    return jsonify(
+                    token = token,
+                   )
+
+
+
+#Función que solicita un token al servidor JWT
+def obtenerNuevoToken():
+    parametros = {"clienteId":"grupo1", "password":"grupo1"}
+    ruta_solicitud = 'http://' + '127.0.0.1:5004' + '/post/autorizacion'
+    response = requests.post(ruta_solicitud, params=parametros)
+
+
+
+    solicitud = response.get_json(force=True, silent = True) #Le digo que si hay error al parsear el JSON no muera, sino que retorne None
+
+
+    #Verifico si se puede parsear el JSON recibido
+    if solicitud == None:
+        return jsonify(
+                    estado='500',
+                    mensaje='Existe un error en la estructura del JSON que devuelve el servidor JWT',
+                   )
+    token = solicitud.get('data').get('token')
+    
+    return token #Retorno el token generado
 
 
 
