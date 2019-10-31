@@ -20,3 +20,25 @@ services:
     cap_add:
       - SYS_NICE  # CAP_SYS_NICE
 
+  jwt:
+    build:
+      context: ./jwt-server
+      dockerfile: node.dockerfile
+    ports:
+      - "5004:5000"
+    volumes:
+      - ./publickeys:/home/publickeys 
+    networks:
+      - jwt-network
+      - traducciones-network
+    depends_on: 
+      - jwtdb
+
+  jwtdb:
+    image: mongo
+    networks:
+      - jwt-network
+
+networks:
+  jwt-network:
+    driver: bridge
