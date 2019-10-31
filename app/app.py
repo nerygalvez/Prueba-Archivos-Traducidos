@@ -150,23 +150,24 @@ def pruebaObtenerToken():
 #Función que solicita un token al servidor JWT
 def obtenerNuevoToken():
     parametros = {"clienteId":"grupo1", "password":"grupo1"}
-    ruta_solicitud = 'http://' + '127.0.0.1:5004' + '/post/autorizacion'
+    ruta_solicitud = 'http://' + '35.192.23.213:5004' + '/post/autorizacion'
     response = requests.post(ruta_solicitud, params=parametros)
 
-
-
-    solicitud = response.get_json(force=True, silent = True) #Le digo que si hay error al parsear el JSON no muera, sino que retorne None
-
+    respuesta = json.loads(response.text)
 
     #Verifico si se puede parsear el JSON recibido
-    if solicitud == None:
+    if respuesta == None:
         return jsonify(
                     estado='500',
                     mensaje='Existe un error en la estructura del JSON que devuelve el servidor JWT',
                    )
-    token = solicitud.get('data').get('token')
     
-    return token #Retorno el token generado
+    if respuesta["estado"] == "200": #Si se generó el token correctamente
+        data = respuesta["data"]
+        token = data["token"]
+        return token #Retorno el token generado
+
+    return respuesta #Retorno el json con el código de error y el mensaje
 
 
 
