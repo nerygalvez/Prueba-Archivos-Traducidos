@@ -113,10 +113,25 @@ def listarComplementos() -> str:
 @app.route('/suscripcionAlmacenamiento',methods=['GET'])
 def suscripcionAlmacenamiento():
     token = obtenerNuevoToken() #Genero un nuevo token
-    #"ip":"127.0.0.1:5003"
-    parametros = {"token":token, "ip":os.environ["IP_TRADUCIDOS"] + ':' + os.environ["TRADUCIDOS_PORT"]}
-    ruta_solicitud = 'http://' + os.environ["IP_ALMACENAMIENTO"] + ':' + os.environ["ALMACENAMIENTO_PORT"] + '/post/suscripcion'
-    response = requests.post(ruta_solicitud, json=parametros)
+
+    #Armo el JSON con el que voy a hacer la solicitud al ESB
+    json_esb = {
+                "token":token,
+                "url":'http://' + os.environ["IP_ALMACENAMIENTO"] + ':' + os.environ["ALMACENAMIENTO_PORT"] + '/post/suscripcion',
+                "tipo":"POST",
+                "funcionSolicitada":"almacenamiento.suscripcion",
+                "parametros":{
+                        "token":token,
+                        "ip":os.environ["IP_TRADUCIDOS"] + ':' + os.environ["TRADUCIDOS_PORT"]
+                }
+            }
+
+
+
+    #parametros = {"token":token, "ip":os.environ["IP_TRADUCIDOS"] + ':' + os.environ["TRADUCIDOS_PORT"]}
+    #ruta_solicitud = 'http://' + os.environ["IP_ALMACENAMIENTO"] + ':' + os.environ["ALMACENAMIENTO_PORT"] + '/post/suscripcion'
+    ruta_solicitud = 'http://' + os.environ["IP_ESB"] + ':' + os.environ["ESB_PORT"] + '/post/comunicacion'
+    response = requests.post(ruta_solicitud, json=json_esb)
 
     #Debería de obtener un json Respuesta
     """
