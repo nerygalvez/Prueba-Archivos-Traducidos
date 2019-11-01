@@ -14,6 +14,8 @@ services:
       - IP_JWT=35.238.140.134
       - ALMACENAMIENTO_PORT=5001
       - IP_ALMACENAMIENTO=35.238.140.134
+      - ESB_PORT=5005
+      - IP_ESB=35.238.140.134
 
 
   db:
