@@ -13,7 +13,6 @@ def index() -> str:
     return redirect('/listarComplementos')
 
 
-
 @app.route('/post/complementoTraducido', methods=['POST'])
 def ComplementoTraducido():
 
@@ -81,8 +80,6 @@ def ComplementoTraducido():
     #return render_template('index.html', data=results)
 
 
-
-
 @app.route('/listarComplementos')
 def listarComplementos() -> str:
     config = {
@@ -105,20 +102,6 @@ def listarComplementos() -> str:
     return render_template('complementos.html', data=results)
 
 
-
-
-
-@app.route('/descargarPO/<id>',methods=['GET'])
-def descargarPO(id):
-    return redirect('/listarComplementos')
-
-
-@app.route('/descargarMO/<id>',methods=['GET'])
-def descargarMO(id):
-    return redirect('/listarComplementos')
-
-
-
 @app.route('/suscripcionAlmacenamiento',methods=['GET'])
 def suscripcionAlmacenamiento():
     token = obtenerNuevoToken() #Genero un nuevo token
@@ -138,7 +121,6 @@ def suscripcionAlmacenamiento():
     return redirect('/listarComplementos') #Redirecciono a la lista de complementos
 
 
-
 @app.route('/pruebaObtenerToken',methods=['GET'])
 def pruebaObtenerToken():
     token = obtenerNuevoToken()
@@ -146,7 +128,6 @@ def pruebaObtenerToken():
     return jsonify(
                     token = token,
                    )
-
 
 
 #Función que solicita un token al servidor JWT
@@ -178,7 +159,6 @@ def obtenerNuevoToken():
         return token #Retorno el token generado
 
     return respuesta #Retorno el json con el código de error y el mensaje
-
 
 
 #Función que retorna True si es valido el token sino retorna el error
@@ -237,6 +217,140 @@ def getValidationToken(token):
 
     return False
 
+
+@app.route('/descargarPO/<id>',methods=['GET'])
+def descargarPO(id):
+    config = {
+        'user': 'root',
+        'password': 'root',
+        'host': 'db',
+        'port': '3306',
+        'database': 'Traducido',
+        'auth_plugin':'mysql_native_password'
+    }
+    connection = mysql.connector.connect(**config)
+    #----------------------------------------------------------------
+    cursor = connection.cursor()
+    cursor.execute('SELECT Complemento, Localizacion, Cadena FROM ArchivoCadena WHERE idDetalleArchivo='+ id)
+    results = [{"Complemento":Complemento, "Localizacion": Localizacion,"Cadena": Cadena} for (Complemento, Localizacion, Cadena) in cursor]
+    cursor.close()
+    connection.close()
+    #----------------------------------------------------------------
+    localpath = "pfiles/"
+    complete = localpath + "ERR.po"
+    semicomplete = "ERR.po"
+    tipo = ".po"
+    #----------------------------------------------------------------
+    j = json.dumps({'result':results})
+    try:
+        decoded = json.loads(j)
+        for x in decoded['result']:
+            name = x['Complemento'].replace(" ", "_")
+            localizacion = x['Localizacion']
+            nameFile = name + "-" + localizacion
+            complete = localpath + nameFile + tipo
+            semicomplete = nameFile + tipo
+            po = polib.POFile()
+            po.metadata = {
+                'Project-Id-Version': '1.0',
+                'Report-Msgid-Bugs-To': 'you@example.com',
+                'POT-Creation-Date':  time.strftime("%c"),
+                'PO-Revision-Date':  time.strftime("%c"),
+                'Last-Translator': '<you@example.com>',
+                'Language-Team': '<yourteam@example.com>',
+                'MIME-Version': '1.0',
+                'Content-Type': 'text/plain; charset=utf-8',
+                'Content-Transfer-Encoding': '8bit',
+                }
+            decodedextra = json.loads(x['Cadena'])
+            for y in decodedextra:
+                entry = polib.POEntry(
+                    msgid= y['msgid'],
+                    msgstr=y['msgstr'],
+                    occurrences=[('welcome.py', '12'), ('anotherfile.py', '34')]
+                    )
+                po.append(entry)
+            po.save(complete)
+    except (ValueError, KeyError, TypeError):
+        print("JSON format error", file=sys.stderr)
+        return redirect('/listarComplementos')
+    #----------------------------------------------------------------
+    return redirect(url_for('get_file', path=semicomplete))
+
+@app.route("/files")
+def list_files():
+    """Endpoint to list files on the server."""
+    files = []
+    for filename in os.listdir(UPLOAD_DIRECTORY):
+        path = os.path.join(UPLOAD_DIRECTORY, filename)
+        if os.path.isfile(path):
+            files.append(filename)
+    return jsonify(files)
+
+
+@app.route("/files/<path:path>")
+def get_file(path):
+    """Download a file."""
+    return send_from_directory(UPLOAD_DIRECTORY, path, as_attachment=True)
+
+
+@app.route("/files/<filename>", methods=["POST"])
+def post_file(filename):
+    """Upload a file."""
+
+    if "/" in filename:
+        # Return 400 BAD REQUEST
+        abort(400, "no subdirectories directories allowed")
+
+    with open(os.path.join(UPLOAD_DIRECTORY, filename), "wb") as fp:
+        fp.write(request.data)
+
+    # Return 201 CREATED
+    return "", 201
+
+
+@app.route('/descargarMO/<id>',methods=['GET'])
+def descargarMO(id):
+    config = {
+        'user': 'root',
+        'password': 'root',
+        'host': 'db',
+        'port': '3306',
+        'database': 'Traducido',
+        'auth_plugin':'mysql_native_password'
+    }
+    connection = mysql.connector.connect(**config)
+    #----------------------------------------------------------------
+    cursor = connection.cursor()
+    cursor.execute('SELECT Complemento, Localizacion FROM ArchivoCadena WHERE idDetalleArchivo='+ id)
+    results = [{"Complemento":Complemento, "Localizacion": Localizacion} for (Complemento, Localizacion) in cursor]
+    cursor.close()
+    connection.close()
+    #----------------------------------------------------------------
+    localpath = "pfiles/"
+    complete = localpath + "ERR.mo"
+    nameFile = "ERR"
+    semicomplete = "ERR.mo"
+    tipoMO = ".mo"
+    tipoPO = ".po"
+    #----------------------------------------------------------------
+    j = json.dumps({'result':results})
+    try:
+        decoded = json.loads(j)
+        for x in decoded['result']:
+            name = x['Complemento'].replace(" ", "_")
+            localizacion = x['Localizacion']
+            nameFile = name + "-" + localizacion
+            complete = localpath + nameFile + tipoMO
+            semicomplete = nameFile + tipoMO
+    except (ValueError, KeyError, TypeError):
+        print("JSON format error", file=sys.stderr)
+        return redirect('/listarComplementos')
+    #----------------------------------------------------------------
+    completePO = localpath + nameFile + tipoPO
+    po = polib.pofile(completePO)
+    po.save_as_mofile(complete)
+    return redirect(url_for('get_file', path=semicomplete))
 
 
 if __name__ == '__main__':
