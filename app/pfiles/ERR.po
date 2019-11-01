@@ -1,0 +1,11 @@
+# app.py:1
+msgid "Warning"
+msgstr "Peligro"
+
+# app.py:4
+msgid "Wrong"
+msgstr "Error"
+
+# app.py:7
+msgid "Delete"
+msgstr "Eliminar"

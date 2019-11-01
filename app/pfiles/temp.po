@@ -1,0 +1,15 @@
+# app.py:1
+msgid "Hola Mundo"
+msgstr "Hello world"
+
+# app.py:4
+msgid "Adios"
+msgstr "Bye"
+
+# app.py:7
+msgid "Bienvenido"
+msgstr "Welcome"
+
+# app.py:11
+msgid "Rojo"
+msgstr "Red"
