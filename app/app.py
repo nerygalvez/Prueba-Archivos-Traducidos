@@ -1,10 +1,18 @@
 from typing import List, Dict
-from flask import Flask,render_template,request,jsonify,redirect
+from flask import Flask,render_template,request,jsonify,redirect, abort, send_from_directory, url_for
+import os
+import sys
+import polib
+import time
+import requests
 import mysql.connector
 import json
 import jwt
-import requests
-import os
+
+UPLOAD_DIRECTORY = "pfiles/"
+
+if not os.path.exists(UPLOAD_DIRECTORY):
+    os.makedirs(UPLOAD_DIRECTORY)
 
 app = Flask(__name__)
 
