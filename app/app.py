@@ -123,8 +123,8 @@ def descargarMO(id):
 def suscripcionAlmacenamiento():
     token = obtenerNuevoToken() #Genero un nuevo token
     #"ip":"127.0.0.1:5003"
-    parametros = {"token":token, "ip":os.environ["IP_TRADUCIDOS"] + os.environ["TRADUCIDOS_PORT"]}
-    ruta_solicitud = 'http://' + '127.0.0.1:5001' + '/post/suscripcion'
+    parametros = {"token":token, "ip":os.environ["IP_TRADUCIDOS"] + ':' + os.environ["TRADUCIDOS_PORT"]}
+    ruta_solicitud = 'http://' + os.environ["IP_ALMACENAMIENTO"] + ':' + os.environ["ALMACENAMIENTO_PORT"] + '/post/suscripcion'
     response = requests.post(ruta_solicitud, json=parametros)
 
     #Debería de obtener un json Respuesta
