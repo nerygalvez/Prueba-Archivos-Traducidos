@@ -5,7 +5,15 @@ services:
     links:
       - db
     ports:
-      - "5003:5000"      
+      - "5003:5000"
+    environment: 
+      - TRADUCIDOS_HOST=app
+      - TRADUCIDOS_PORT=5003
+      - JWT_PORT=5004
+      - IP_TRADUCIDOS=35.238.140.134
+      - IP_JWT=35.238.140.134
+
+
   db:
     #image: mysql:5.7
     image: mysql:8.0

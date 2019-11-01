@@ -4,6 +4,7 @@ import mysql.connector
 import json
 import jwt
 import requests
+import os
 
 app = Flask(__name__)
 
@@ -121,9 +122,10 @@ def descargarMO(id):
 @app.route('/suscripcionAlmacenamiento',methods=['GET'])
 def suscripcionAlmacenamiento():
     token = obtenerNuevoToken() #Genero un nuevo token
-    parametros = {"token":token, "ip":"127.0.0.1:5003"}
+    #"ip":"127.0.0.1:5003"
+    parametros = {"token":token, "ip":os.environ["IP_TRADUCIDOS"] + os.environ["TRADUCIDOS_PORT"]}
     ruta_solicitud = 'http://' + '127.0.0.1:5001' + '/post/suscripcion'
-    response = requests.post(ruta_solicitud, params=parametros)
+    response = requests.post(ruta_solicitud, json=parametros)
 
     #Debería de obtener un json Respuesta
     """
@@ -149,9 +151,17 @@ def pruebaObtenerToken():
 
 #Función que solicita un token al servidor JWT
 def obtenerNuevoToken():
-    parametros = {"clienteId":"grupo1", "password":"grupo1"}
-    ruta_solicitud = 'http://' + '35.192.23.213:5004' + '/post/autorizacion'
-    response = requests.post(ruta_solicitud, params=parametros)
+    #headers = {'your_header_title': 'your_header'}
+    # In you case: headers = {'content-type': 'application/json'}
+    #r = requests.post("your_url", headers=headers, data=your_data)
+
+    headers = {'Content-Type': 'application/json'}
+
+
+    parametros = {"clientid":"grupo1", "password":"grupo1"}
+    #ruta_solicitud = 'http://' + '35.192.23.213:5004' + '/post/autorizacion'
+    ruta_solicitud = 'http://' + os.environ["IP_JWT"] + ':' + os.environ["JWT_PORT"] + '/post/autorizacion'
+    response = requests.post(ruta_solicitud, headers=headers, json=parametros)
 
     respuesta = json.loads(response.text)
 
